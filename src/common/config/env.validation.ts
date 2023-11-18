@@ -1,5 +1,6 @@
 import { Transform, Type } from 'class-transformer';
 import { IsEnum, IsNumber, IsString, ValidateNested } from 'class-validator';
+
 import { Environment } from '../other/constants/environment.enum';
 
 export class NodeConfig {

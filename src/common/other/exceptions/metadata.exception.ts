@@ -47,7 +47,10 @@ const exceptionMetadata: Record<ExceptionName, IExceptionInfo> = {
   },
 };
 
-export const getException = (name: ExceptionName, detail?: string) => {
+export const getException = (
+  name: ExceptionName,
+  detail?: string,
+): IExceptionInfo => {
   const exception: IExceptionInfo = Object.assign(
     {},
     exceptionMetadata[name] ?? exceptionMetadata.INTERNAL_EXCEPTION,

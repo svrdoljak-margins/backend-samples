@@ -1,13 +1,13 @@
+import {
+  WinstonModuleOptions,
+  WinstonModuleOptionsFactory,
+} from 'nest-winston';
 import * as winston from 'winston';
-import 'winston-daily-rotate-file';
+import * as DailyRotateFile from 'winston-daily-rotate-file';
+
 import { RootConfig } from '../config/env.validation';
 import { LogColor } from '../other/constants/log-color.enum';
 import { LogLevel } from '../other/constants/log-level';
-
-import {
-  WinstonModuleOptionsFactory,
-  WinstonModuleOptions,
-} from 'nest-winston';
 
 export class WinstonConfig implements WinstonModuleOptionsFactory {
   constructor(private readonly config: RootConfig) {
@@ -32,7 +32,7 @@ export class WinstonConfig implements WinstonModuleOptionsFactory {
 
   private getLogTransports(): winston.transport[] {
     return [
-      new winston.transports.DailyRotateFile({
+      new DailyRotateFile({
         dirname: 'logs/',
         filename: 'error-%DATE%.log',
         datePattern: 'YYYY-MM-DD-HH',

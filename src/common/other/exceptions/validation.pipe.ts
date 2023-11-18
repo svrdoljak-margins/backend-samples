@@ -1,12 +1,13 @@
 import { ValidationPipe } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
+
 import { ProjectAbbrvValidationException } from './custom.exception';
 
 const DEFAULT_MSG = 'Validation failed. Please try again.';
 
 export const customValidationPipe = new ValidationPipe({
   stopAtFirstError: true,
-  exceptionFactory: (validationErrors: ValidationError[] = []) => {
+  exceptionFactory: (validationErrors: ValidationError[] = []): Error => {
     let msg: string | undefined;
     let errors = validationErrors;
 

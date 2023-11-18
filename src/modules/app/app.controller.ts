@@ -1,7 +1,8 @@
 import { Controller, Get, VERSION_NEUTRAL } from '@nestjs/common';
-import { AppService } from './app.service';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+
 import { HealthCheckResponse } from '../../common/responses/health-check.response';
+import { AppService } from './app.service';
 
 @Controller({
   version: VERSION_NEUTRAL,

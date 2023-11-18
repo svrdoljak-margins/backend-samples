@@ -1,12 +1,12 @@
-import * as winston from 'winston';
-
 import { Module } from '@nestjs/common';
+import { TypedConfigModule, dotenvLoader } from 'nest-typed-config';
+import { WinstonModule } from 'nest-winston';
+
+import { RootConfig } from 'src/common/config/env.validation';
+import { WinstonConfig } from 'src/common/providers/winston.provider';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TypedConfigModule, dotenvLoader } from 'nest-typed-config';
-import { RootConfig } from 'src/common/config/env.validation';
-import { WinstonModule } from 'nest-winston';
-import { WinstonConfig } from 'src/common/providers/winston.provider';
 
 @Module({
   imports: [
@@ -23,6 +23,7 @@ import { WinstonConfig } from 'src/common/providers/winston.provider';
       useClass: WinstonConfig,
     }),
   ],
+
   controllers: [AppController],
   providers: [AppService],
 })

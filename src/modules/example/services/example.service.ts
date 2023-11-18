@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+
 import { AbstractExampleService } from '../abstract/example.abstract.service';
 
 @Injectable()

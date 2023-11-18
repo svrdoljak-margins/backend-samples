@@ -1,17 +1,17 @@
-import helmet from 'helmet';
-
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './modules/app/app.module';
 import { VersioningType } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
-import { customValidationPipe } from './common/other/exceptions/validation.pipe';
-import { ignoreFaviconMiddleware } from './common/middlewares/ignore-favicon.middleware';
-import { createDocsAuthMiddleware } from './common/middlewares/docs-auth.middleware';
-import { swaggerConfig } from './common/other/swagger/swagger.config';
+import helmet from 'helmet';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
-import { RootConfig } from './common/config/env.validation';
 
-async function bootstrap() {
+import { RootConfig } from './common/config/env.validation';
+import { createDocsAuthMiddleware } from './common/middlewares/docs-auth.middleware';
+import { ignoreFaviconMiddleware } from './common/middlewares/ignore-favicon.middleware';
+import { customValidationPipe } from './common/other/exceptions/validation.pipe';
+import { swaggerConfig } from './common/other/swagger/swagger.config';
+import { AppModule } from './modules/app/app.module';
+
+async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
 
   // Get config

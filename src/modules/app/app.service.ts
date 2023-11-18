@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
+
+import { ProjectConfig } from 'src/common/config/env.validation';
+
 import { IHealthCheckService } from '../../common/interfaces/health-check.interface';
 import { HealthCheckResponse } from '../../common/responses/health-check.response';
-import { ProjectConfig } from 'src/common/config/env.validation';
 
 @Injectable()
 export class AppService implements IHealthCheckService {
