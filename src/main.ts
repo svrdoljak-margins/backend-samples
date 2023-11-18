@@ -9,6 +9,7 @@ import { createDocsAuthMiddleware } from './common/middlewares/docs-auth.middlew
 import { ignoreFaviconMiddleware } from './common/middlewares/ignore-favicon.middleware';
 import { customValidationPipe } from './common/other/exceptions/validation.pipe';
 import { swaggerConfig } from './common/other/swagger/swagger.config';
+import { AppClusterService } from './modules/app/app.cluster';
 import { AppModule } from './modules/app/app.module';
 
 async function bootstrap(): Promise<void> {
@@ -49,4 +50,4 @@ async function bootstrap(): Promise<void> {
   await app.listen(config.APP.PORT);
 }
 
-bootstrap();
+AppClusterService.clusterize(bootstrap) || bootstrap();

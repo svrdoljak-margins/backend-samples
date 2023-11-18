@@ -1,5 +1,11 @@
 import { Transform, Type } from 'class-transformer';
-import { IsEnum, IsNumber, IsString, ValidateNested } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsNumber,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 
 import { Environment } from '../other/constants/environment.enum';
 
@@ -42,6 +48,10 @@ export class AppConfig {
   @Type(() => NodeConfig)
   @ValidateNested()
   public readonly NODE!: NodeConfig;
+
+  @Transform(({ value }) => Boolean(value))
+  @IsBoolean()
+  public readonly CLUSTERING!: boolean;
 }
 
 export class RootConfig {
