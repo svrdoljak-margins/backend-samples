@@ -1,9 +1,7 @@
-import * as basicAuth from 'express-basic-auth';
+import * as auth from 'express-basic-auth';
 
-export const docsAuthMiddleware = () =>
-  basicAuth({
+export const createDocsAuthMiddleware = (username: string, password: string) =>
+  auth({
     challenge: true,
-    users: {
-      ['admin']: 'admin',
-    },
+    users: { [username]: password },
   });
