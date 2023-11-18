@@ -7,7 +7,7 @@ module.exports = {
   env: {
     node: true,
   },
-  plugins: ['@typescript-eslint', 'prettier', 'import'],
+  plugins: ['@typescript-eslint', 'prettier', 'import', 'prettier'],
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
@@ -16,6 +16,10 @@ module.exports = {
     'plugin:import/typescript',
   ],
   rules: {
+    'prettier/prettier': 'warn',
+    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-unused-vars': 'warn',
+    'no-console': 'error',
     'no-nested-ternary': 'error',
     'max-depth': ['error', 3],
     'max-params': ['error', 4],
