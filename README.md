@@ -8,7 +8,7 @@
 - [Typescript](https://www.typescriptlang.org) programming language
 - [Nest](https://github.com/nestjs/nest) Node.js framework
 - [Docker](https://www.docker.com) for project containerization
-- <TODO Add>
+- TODO Add
 
 ## Getting started
 

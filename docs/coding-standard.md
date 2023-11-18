@@ -14,7 +14,7 @@
 ### Files
 
 - Use camelCase for file names.
-- Files should have prefixes based what they do
+- Files should have suffixes based what they do
 
   ```typescript
   // Example
