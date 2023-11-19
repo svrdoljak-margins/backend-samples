@@ -1,5 +1,3 @@
-import * as crypto from 'crypto';
-
 export class StringUtils {
   /**
    * Capitalizes first letter and convert the rest to lowercase.
@@ -24,15 +22,5 @@ export class StringUtils {
       .split(' ')
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
-  }
-
-  /**
-   * Generates a random string of given length.
-   */
-  static generateRandomString(length = 6): string {
-    return crypto
-      .randomBytes(length / 2)
-      .toString('hex')
-      .toUpperCase();
   }
 }
