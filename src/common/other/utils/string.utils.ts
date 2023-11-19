@@ -1,6 +1,6 @@
 import * as crypto from 'crypto';
 
-export class StringUtil {
+export class StringUtils {
   /**
    * Capitalizes first letter and convert the rest to lowercase.
    */

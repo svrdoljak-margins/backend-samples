@@ -1,6 +1,6 @@
 import { ReadStream } from 'fs';
 
-export class StreamUtil {
+export class StreamUtils {
   /**
    * Reads a stream into a buffer.
    */

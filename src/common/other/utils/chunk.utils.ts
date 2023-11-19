@@ -1,6 +1,6 @@
 const DEFAULT_CHUNK_SIZE = 400;
 
-export class ChunkUtil {
+export class ChunkUtils {
   /**
    * Splits an array into chunks of specified size.
    */
