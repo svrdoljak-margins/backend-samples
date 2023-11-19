@@ -18,6 +18,9 @@ async function bootstrap(): Promise<void> {
   // Get config
   const config = app.get(RootConfig);
 
+  // CORS
+  app.enableCors();
+
   // Logging
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
 
