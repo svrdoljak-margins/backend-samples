@@ -5,12 +5,11 @@ import {
 import * as winston from 'winston';
 import * as DailyRotateFile from 'winston-daily-rotate-file';
 
-import { RootConfig } from '../config/env.validation';
 import { LogColor } from '../other/constants/log-color.enum';
 import { LogLevel } from '../other/constants/log-level';
 
-export class WinstonConfig implements WinstonModuleOptionsFactory {
-  constructor(private readonly config: RootConfig) {
+export class WinstonOptions implements WinstonModuleOptionsFactory {
+  constructor() {
     winston.addColors({
       error: LogColor.ERROR,
       warning: LogColor.WARNING,
