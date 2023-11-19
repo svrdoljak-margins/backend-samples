@@ -5,6 +5,7 @@ import { WinstonModule } from 'nest-winston';
 import { RootConfig } from 'src/common/config/env.validation';
 import { WinstonConfig } from 'src/common/providers/winston.provider';
 
+import { ExampleModule } from '../example/example.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -22,6 +23,9 @@ import { AppService } from './app.service';
       inject: [RootConfig],
       useClass: WinstonConfig,
     }),
+
+    // Modules
+    ExampleModule,
   ],
 
   controllers: [AppController],
