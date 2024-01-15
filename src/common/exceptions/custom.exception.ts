@@ -4,12 +4,12 @@
  */
 
 import { ExceptionName } from './custom.exception.enum';
-import { IExceptionInfo } from './exception-info.interface';
+import { ICustomExceptionInfo } from './exception-info.interface';
 import { getException } from './metadata.exception';
 
 export abstract class ProjectAbbrvException extends Error {
   public exceptionName: ExceptionName;
-  public exceptionInfo: IExceptionInfo;
+  public exceptionInfo: ICustomExceptionInfo;
 
   constructor(exceptionName: ExceptionName, message: string) {
     super();
@@ -44,6 +44,12 @@ export class ProjectAbbrvForbiddenException extends ProjectAbbrvException {
 export class ProjectAbbrvValidationException extends ProjectAbbrvException {
   constructor(message: string) {
     super(ExceptionName.VALIDATION_FAILED, message);
+  }
+}
+
+export class ProjectAbbrvExternalServiceException extends ProjectAbbrvException {
+  constructor(message: string) {
+    super(ExceptionName.EXTERNAL_SERVICE_EXCEPTION, message);
   }
 }
 
