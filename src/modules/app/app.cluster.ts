@@ -5,7 +5,7 @@ import * as cluster from 'cluster';
 
 import { Injectable, Logger } from '@nestjs/common';
 
-import { NUM_CPUS } from 'src/common/other/constants/clustering';
+import { NUM_CPUS } from 'src/common/constants/clustering';
 
 type ProcessWithEnv = ChildProcess & { env: { id: number } };
 

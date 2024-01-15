@@ -7,7 +7,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { Environment } from '../other/constants/environment.enum';
+import { Environment } from '../constants/environment.enum';
 
 export class NodeConfig {
   @IsEnum(Environment, {

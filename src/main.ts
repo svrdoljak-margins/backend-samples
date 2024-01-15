@@ -1,14 +1,15 @@
 import { VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
+import * as correlator from 'express-correlation-id';
 import helmet from 'helmet';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 import { RootConfig } from './common/config/env.validation';
+import { customValidationPipe } from './common/exceptions/validation.pipe';
 import { createDocsAuthMiddleware } from './common/middlewares/docs-auth.middleware';
 import { ignoreFaviconMiddleware } from './common/middlewares/ignore-favicon.middleware';
-import { customValidationPipe } from './common/other/exceptions/validation.pipe';
-import { swaggerConfig } from './common/other/swagger/swagger.config';
+import { swaggerConfig } from './common/swagger/swagger.config';
 import { AppClusterService } from './modules/app/app.cluster';
 import { AppModule } from './modules/app/app.module';
 
@@ -45,6 +46,9 @@ async function bootstrap(): Promise<void> {
     '/docs*',
     createDocsAuthMiddleware(config.SWAGGER.USERNAME, config.SWAGGER.PASSWORD),
   );
+
+  // Enable correlation ID for Express Requests
+  app.use(correlator());
 
   // OpenAPI (Swagger)
   const document = SwaggerModule.createDocument(app, swaggerConfig);

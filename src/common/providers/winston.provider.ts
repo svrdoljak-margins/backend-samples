@@ -1,3 +1,5 @@
+import { Injectable } from '@nestjs/common';
+import { getId as getCorrelationId } from 'express-correlation-id';
 import {
   WinstonModuleOptions,
   WinstonModuleOptionsFactory,
@@ -5,9 +7,10 @@ import {
 import * as winston from 'winston';
 import * as DailyRotateFile from 'winston-daily-rotate-file';
 
-import { LogColor } from '../other/constants/log-color.enum';
-import { LogLevel } from '../other/constants/log-level';
+import { LogColor } from '../constants/log-color.enum';
+import { LogLevel } from '../constants/log-level';
 
+@Injectable()
 export class WinstonOptions implements WinstonModuleOptionsFactory {
   constructor() {
     winston.addColors({
@@ -23,7 +26,10 @@ export class WinstonOptions implements WinstonModuleOptionsFactory {
     return winston.format.combine(
       winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
       winston.format.printf(
-        (msg) => `${msg.timestamp} ${msg.level}: ${msg.message}`,
+        (msg) =>
+          `${getCorrelationId() ?? 'System'} |  ${msg.timestamp} ${
+            msg.level
+          }: ${msg.message}`,
       ),
       winston.format.errors({ stack: true }),
     );
@@ -64,9 +70,9 @@ export class WinstonOptions implements WinstonModuleOptionsFactory {
             winston.format.timestamp({ format: 'DD/MM/YYYY HH:mm:ss' }),
             winston.format.printf(
               (msg) =>
-                `${msg.timestamp} ${msg.level}:${
-                  msg.code ? `(${msg.code}` : ''
-                } ${msg.message}`,
+                `${getCorrelationId() ?? 'System'} ${msg.timestamp} ${
+                  msg.level
+                }:${msg.code ? `(${msg.code}` : ''} ${msg.message}`,
             ),
           ),
         }),
