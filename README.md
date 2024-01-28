@@ -1,6 +1,16 @@
-# Base architecture
+# Base architecture 
 
 <TODO Add brief project description>
+
+## Codebase setup checklist
+
+- Copy .env.example, rename to .env and add necessary variables
+- Search through files for "TODO" comments
+- Add necessary information about the project in this file, such as title, description, technologies used, etc.
+- Before development, make sure to read the codebase documentation in `/docs` directory
+- If using AWS EB, configure Papertrail logger config if needed; otherwise delete 01_papertrail.config
+- Remove this section
+
 
 ## Project stack
 
