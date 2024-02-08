@@ -11,7 +11,9 @@
         "dtoFileNameSuffix": [
           ".dto.ts",
           ".entity.ts",
-          ".response.ts"
+          ".response.ts",
+          ".params.ts",
+          ".query.ts"
         ]
       }
     }]
