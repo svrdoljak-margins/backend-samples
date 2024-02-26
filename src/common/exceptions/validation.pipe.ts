@@ -7,6 +7,7 @@ const DEFAULT_MSG = 'Validation failed. Please try again.';
 
 export const customValidationPipe = new ValidationPipe({
   stopAtFirstError: true,
+  transform: true,
   exceptionFactory: (validationErrors: ValidationError[] = []): Error => {
     let msg: string | undefined;
     let errors = validationErrors;

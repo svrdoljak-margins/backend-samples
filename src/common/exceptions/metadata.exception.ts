@@ -47,7 +47,7 @@ export const exceptionMetadata: Record<ExceptionName, ICustomExceptionInfo> = {
   },
   EXTERNAL_SERVICE_EXCEPTION: {
     status: 504,
-    code: '0007',
+    code: '0008',
     detail: 'External service failed',
   },
 };
