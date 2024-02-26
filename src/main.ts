@@ -9,7 +9,7 @@ import { RootConfig } from './common/config/env.validation';
 import { customValidationPipe } from './common/exceptions/validation.pipe';
 import { createDocsAuthMiddleware } from './common/middlewares/docs-auth.middleware';
 import { ignoreFaviconMiddleware } from './common/middlewares/ignore-favicon.middleware';
-import { swaggerConfig } from './common/swagger/swagger.config';
+import { getSwaggerConfig } from './common/swagger/swagger.config';
 import { AppClusterService } from './modules/app/app.cluster';
 import { AppModule } from './modules/app/app.module';
 
@@ -51,6 +51,13 @@ async function bootstrap(): Promise<void> {
   app.use(correlator());
 
   // OpenAPI (Swagger)
+
+  const swaggerConfig = getSwaggerConfig(
+    config.PROJECT.NAME,
+    config.PROJECT.DESCRIPTION,
+    config.PROJECT.VERSION,
+  );
+
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('docs', app, document);
 

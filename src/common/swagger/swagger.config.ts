@@ -1,7 +1,14 @@
-import { DocumentBuilder } from '@nestjs/swagger';
+import { DocumentBuilder, OpenAPIObject } from '@nestjs/swagger';
 
-export const swaggerConfig = new DocumentBuilder()
-  .setTitle('Base API')
-  .setDescription('Base project API')
-  .setVersion('1.0')
-  .build();
+export const getSwaggerConfig = (
+  title: string,
+  description: string,
+  version: string,
+): Omit<OpenAPIObject, 'paths'> => {
+  return new DocumentBuilder()
+    .setTitle(title)
+    .setDescription(description)
+    .setVersion(version)
+    .addBearerAuth()
+    .build();
+};
