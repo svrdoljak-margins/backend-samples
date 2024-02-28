@@ -6,6 +6,7 @@
 
 - Copy .env.example, rename to .env and add necessary variables
 - Search through files for "TODO" comments
+- Initialize Husky with `husky install`
 - Add necessary information about the project in this file, such as title, description, technologies used, etc.
 - Before development, make sure to read the codebase documentation in `/docs` directory
 - If using AWS EB, configure Papertrail logger config `01_papertrail.config` if you intend to use it; otherwise delete the file
