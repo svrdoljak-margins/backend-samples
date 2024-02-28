@@ -11,7 +11,7 @@ export class ExampleService extends AbstractExampleService {
   /**
    * Gets example by ID.
    */
-  getExampleById(id: number): string {
+  getExampleById(id: string): string {
     return `Example #${id}`;
   }
 }
