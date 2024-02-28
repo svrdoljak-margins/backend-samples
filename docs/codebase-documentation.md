@@ -9,3 +9,5 @@ npm install
 # Generate documentation
 npm run compodoc
 ```
+
+After that, generated documentation will be available in the `documentation` folder
