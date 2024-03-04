@@ -1,4 +1,4 @@
-export abstract class AbstractStub<T> {
+export abstract class AbstractStub<T extends object> {
   abstract generate(): T;
 
   generateStubAndOverWrite(data: Partial<T> = {}): T {
@@ -6,7 +6,7 @@ export abstract class AbstractStub<T> {
     return Object.assign(stub, data);
   }
 
-  generateStubs(length: number, data?: Partial<T>[]): T[] {
+  generateStubs(length: number, data: Partial<T>[] = []): T[] {
     const stubs: T[] = [];
     for (let i = 0; i < length; i++) {
       stubs.push(this.generateStubAndOverWrite(data[i]));
