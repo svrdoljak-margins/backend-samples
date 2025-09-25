@@ -1,18 +1,17 @@
 /**
  * Custom exception classes for project-specific exceptions.
- * TODO Replace the "ProjectAbbrv" with your project's name.
  */
 
 import { ExceptionName } from './custom.exception.enum';
 import { ICustomExceptionInfo } from './exception-info.interface';
 import { getException } from './metadata.exception';
 
-export abstract class ProjectAbbrvException extends Error {
+export abstract class TaskManagerException extends Error {
   public exceptionName: ExceptionName;
   public exceptionInfo: ICustomExceptionInfo;
 
   constructor(exceptionName: ExceptionName, message: string) {
-    super();
+    super(message);
     this.exceptionName = exceptionName;
     this.exceptionInfo = getException(exceptionName);
     this.exceptionInfo.detail = message;
@@ -23,34 +22,32 @@ export abstract class ProjectAbbrvException extends Error {
   };
 }
 
-export class ProjectAbbrvNotFoundException extends ProjectAbbrvException {
+export class TaskManagerNotFoundException extends TaskManagerException {
   constructor(message: string) {
     super(ExceptionName.NOT_FOUND, message);
   }
 }
 
-export class ProjectAbbrvConflictException extends ProjectAbbrvException {
+export class TaskManagerConflictException extends TaskManagerException {
   constructor(message: string) {
     super(ExceptionName.CONFLICT, message);
   }
 }
 
-export class ProjectAbbrvForbiddenException extends ProjectAbbrvException {
+export class TaskManagerForbiddenException extends TaskManagerException {
   constructor(message: string) {
     super(ExceptionName.FORBIDDEN, message);
   }
 }
 
-export class ProjectAbbrvValidationException extends ProjectAbbrvException {
+export class TaskManagerValidationException extends TaskManagerException {
   constructor(message: string) {
     super(ExceptionName.VALIDATION_FAILED, message);
   }
 }
 
-export class ProjectAbbrvExternalServiceException extends ProjectAbbrvException {
+export class TaskManagerExternalServiceException extends TaskManagerException {
   constructor(message: string) {
     super(ExceptionName.EXTERNAL_SERVICE_EXCEPTION, message);
   }
 }
-
-// TODO Add exception classes when needed.
