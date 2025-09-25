@@ -2,7 +2,7 @@ import { PutObjectCommandOutput, S3 } from '@aws-sdk/client-s3';
 import { Injectable } from '@nestjs/common';
 
 import { S3Config } from 'src/common/config/env.validation';
-import { ProjectAbbrvExternalServiceException } from 'src/common/exceptions/custom.exception';
+import { TaskManagerExternalServiceException } from 'src/common/exceptions/custom.exception';
 
 import { IFileStorageProvider } from './interface/file-storage-provider.interface';
 import { IS3Params } from './interface/s3-params.interface';
@@ -35,7 +35,7 @@ export class S3Service implements IFileStorageProvider {
         ...params,
       });
     } catch (err: unknown) {
-      throw new ProjectAbbrvExternalServiceException(
+      throw new TaskManagerExternalServiceException(
         'Photo upload failed, please try again',
       );
     }
@@ -54,7 +54,7 @@ export class S3Service implements IFileStorageProvider {
         Key: key,
       });
     } catch (err: unknown) {
-      throw new ProjectAbbrvExternalServiceException(
+      throw new TaskManagerExternalServiceException(
         'Photo deletion failed, please try again',
       );
     }
