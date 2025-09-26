@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { CategoryEntity } from '../entities/category.entity';
+import { ICategory } from '../interface/category.interface';
 
 export class CategoryResponse {
   @ApiProperty({ format: 'uuid' })
@@ -27,7 +27,7 @@ export class CategoryResponse {
   @ApiProperty({ type: String, description: 'Last update timestamp' })
   readonly updatedAt: string;
 
-  constructor(category: CategoryEntity) {
+  constructor(category: ICategory) {
     this.id = category.id;
     this.name = category.name;
     this.description = category.description ?? null;
