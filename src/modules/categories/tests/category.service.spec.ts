@@ -1,52 +1,31 @@
 import 'reflect-metadata';
 
-import { Repository, SelectQueryBuilder } from 'typeorm';
-
 import {
   TaskManagerConflictException,
   TaskManagerNotFoundException,
 } from '../../../common/exceptions/custom.exception';
+import { PaginationModel } from '../../../common/pagination/paginaton.model';
+import { AbstractCategoryRepository } from '../abstract/category.abstract.repository';
 import { CategoryService } from '../service/category.service';
 import { CategoryEntity } from '../entities/category.entity';
+import { ICategory } from '../interface/category.interface';
 
-type MockedQueryBuilder = Pick<
-  SelectQueryBuilder<CategoryEntity>,
-  | 'leftJoin'
-  | 'loadRelationCountAndMap'
-  | 'where'
-  | 'andWhere'
-  | 'orderBy'
-  | 'skip'
-  | 'take'
-  | 'getManyAndCount'
-  | 'getOne'
->;
-
-const createQueryBuilderMock = (): jest.Mocked<MockedQueryBuilder> => ({
-  leftJoin: jest.fn().mockReturnThis(),
-  loadRelationCountAndMap: jest.fn().mockReturnThis(),
-  where: jest.fn().mockReturnThis(),
-  andWhere: jest.fn().mockReturnThis(),
-  orderBy: jest.fn().mockReturnThis(),
-  skip: jest.fn().mockReturnThis(),
-  take: jest.fn().mockReturnThis(),
-  getManyAndCount: jest.fn().mockResolvedValue([[], 0]),
-  getOne: jest.fn(),
+const createRepositoryMock = (): jest.Mocked<AbstractCategoryRepository> => ({
+  createCategory: jest.fn(),
+  findPaginatedWithTaskCount: jest.fn(),
+  findOneWithTaskCount: jest.fn(),
+  findActiveById: jest.fn(),
+  save: jest.fn(),
+  softDeleteById: jest.fn(),
+  findByNameCaseInsensitive: jest.fn(),
 });
 
 describe('CategoryService', () => {
   let service: CategoryService;
-  let repository: jest.Mocked<Repository<CategoryEntity>>;
+  let repository: jest.Mocked<AbstractCategoryRepository>;
 
   beforeEach(() => {
-    repository = {
-      create: jest.fn(),
-      save: jest.fn(),
-      findOne: jest.fn(),
-      createQueryBuilder: jest.fn(),
-      softRemove: jest.fn(),
-    } as unknown as jest.Mocked<Repository<CategoryEntity>>;
-
+    repository = createRepositoryMock();
     service = new CategoryService(repository);
   });
 
@@ -57,45 +36,65 @@ describe('CategoryService', () => {
       color: '#ff2200',
     };
 
-    const expectedCategory: CategoryEntity = {
+    const expectedCategory: ICategory = {
       id: 'cat-1',
       name: 'Delivery',
       description: 'Hands over finished work',
       color: '#FF2200',
       createdAt: new Date('2024-01-01T00:00:00.000Z'),
       updatedAt: new Date('2024-01-01T00:00:00.000Z'),
-    } as CategoryEntity;
+      deletedAt: null,
+      taskCount: 0,
+    };
 
-    const qb = createQueryBuilderMock();
-    qb.getOne.mockResolvedValue({ ...expectedCategory, taskCount: 0 });
-
-    repository.findOne.mockResolvedValueOnce(null);
-    repository.create.mockReturnValue(expectedCategory);
-    repository.save.mockResolvedValueOnce(expectedCategory);
-    repository.createQueryBuilder.mockReturnValue(qb as never);
+    repository.findByNameCaseInsensitive.mockResolvedValueOnce(null);
+    repository.createCategory.mockResolvedValueOnce(expectedCategory);
 
     const response = await service.create(dto);
 
-    expect(repository.save).toHaveBeenCalledWith(
-      expect.objectContaining({
+    expect(repository.createCategory).toHaveBeenCalledWith({
+      name: 'Delivery',
+      description: 'Hands over finished work',
+      color: '#FF2200',
+    });
+    expect(response).toEqual(expectedCategory);
+  });
+
+  it('returns paginated categories', async () => {
+    const query = { limit: 10, page: 1, skip: 0 } as any;
+    const categories: ICategory[] = [
+      {
+        id: 'cat-1',
         name: 'Delivery',
-        description: 'Hands over finished work',
-        color: '#FF2200',
-      }),
-    );
-    expect(response).toEqual(
-      expect.objectContaining({
-        name: 'Delivery',
-        color: '#FF2200',
-        taskCount: 0,
-      }),
-    );
+        description: 'Ships work',
+        color: '#FFAA00',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        taskCount: 2,
+        deletedAt: null,
+      },
+    ];
+    const expected = new PaginationModel(categories, query, categories.length);
+
+    repository.findPaginatedWithTaskCount.mockResolvedValueOnce(expected);
+
+    const result = await service.findAll(query);
+
+    expect(repository.findPaginatedWithTaskCount).toHaveBeenCalledWith(query);
+    expect(result).toBe(expected);
   });
 
   it('throws when creating a duplicate category name', async () => {
-    repository.findOne.mockResolvedValueOnce({
+    repository.findByNameCaseInsensitive.mockResolvedValueOnce({
       id: 'existing',
-    } as CategoryEntity);
+      name: 'Finance',
+      description: null,
+      color: null,
+      taskCount: 0,
+      createdAt: new Date('2024-01-01T00:00:00.000Z'),
+      updatedAt: new Date('2024-01-01T00:00:00.000Z'),
+      deletedAt: null,
+    });
 
     await expect(
       service.create({
@@ -107,7 +106,7 @@ describe('CategoryService', () => {
   });
 
   it('throws when updating a missing category', async () => {
-    repository.findOne.mockResolvedValueOnce(null);
+    repository.findActiveById.mockResolvedValueOnce(null);
 
     await expect(
       service.update('missing', {
@@ -126,9 +125,10 @@ describe('CategoryService', () => {
       color: '#0000FF',
       createdAt: new Date('2024-01-01T00:00:00.000Z'),
       updatedAt: new Date('2024-01-01T00:00:00.000Z'),
+      deletedAt: null,
     } as CategoryEntity;
 
-    const updated: CategoryEntity = {
+    const updatedEntity: CategoryEntity = {
       ...existing,
       name: 'Delivery',
       color: '#FFAA00',
@@ -136,14 +136,21 @@ describe('CategoryService', () => {
       updatedAt: new Date('2024-01-02T00:00:00.000Z'),
     } as CategoryEntity;
 
-    const qb = createQueryBuilderMock();
-    qb.getOne.mockResolvedValueOnce({ ...updated, taskCount: 0 });
+    const savedCategory: ICategory = {
+      id: updatedEntity.id,
+      name: updatedEntity.name,
+      description: updatedEntity.description ?? null,
+      color: updatedEntity.color ?? null,
+      createdAt: updatedEntity.createdAt,
+      updatedAt: updatedEntity.updatedAt,
+      deletedAt: updatedEntity.deletedAt ?? null,
+      taskCount: 0,
+    };
 
-    repository.findOne
-      .mockResolvedValueOnce(existing) // getActiveCategoryOrThrow
-      .mockResolvedValueOnce(null); // assertNameIsUnique
-    repository.save.mockResolvedValueOnce(updated);
-    repository.createQueryBuilder.mockReturnValue(qb as never);
+    repository.findActiveById.mockResolvedValueOnce(existing);
+    repository.findByNameCaseInsensitive.mockResolvedValueOnce(null);
+    repository.save.mockResolvedValueOnce(savedCategory);
+    repository.findOneWithTaskCount.mockResolvedValueOnce(savedCategory);
 
     const response = await service.update(existing.id, {
       name: '  Delivery  ',
@@ -158,8 +165,15 @@ describe('CategoryService', () => {
         color: '#FFAA00',
       }),
     );
+    expect(repository.findOneWithTaskCount).toHaveBeenCalledWith(existing.id);
     expect(response).toEqual(
       expect.objectContaining({ name: 'Delivery', color: '#FFAA00' }),
     );
+  });
+
+  it('removes a category via repository', async () => {
+    await service.remove('cat-1');
+
+    expect(repository.softDeleteById).toHaveBeenCalledWith('cat-1');
   });
 });
