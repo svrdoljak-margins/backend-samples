@@ -6,17 +6,18 @@ import { WINSTON_MODULE_NEST_PROVIDER, WinstonLogger } from 'nest-winston';
 import { SendgridConfig } from 'src/common/config/env.validation';
 
 import {
-  IEmailProvider,
+  AbstractEmailProvider,
   TEmailProviderContent,
 } from '../interface/email-provider.interface';
 
 @Injectable()
-export class SendgridEmailService implements IEmailProvider {
+export class SendgridEmailService extends AbstractEmailProvider {
   constructor(
     @Inject(WINSTON_MODULE_NEST_PROVIDER)
     private readonly logger: WinstonLogger,
     private readonly config: SendgridConfig,
   ) {
+    super();
     SendGrid.setApiKey(config.APIKEY);
     Client.setApiKey(config.APIKEY);
   }

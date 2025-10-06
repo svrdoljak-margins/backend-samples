@@ -4,36 +4,38 @@ import { ICategory } from '../interface/category.interface';
 
 export class CategoryResponse {
   @ApiProperty({ format: 'uuid' })
-  readonly id: string;
+  id!: string;
 
   @ApiProperty({ description: 'Display name' })
-  readonly name: string;
+  name!: string;
 
   @ApiPropertyOptional({ description: 'Detailed description' })
-  readonly description?: string | null;
+  description?: string | null;
 
   @ApiPropertyOptional({
     description: 'Hex color representation',
     example: '#4F46E5',
   })
-  readonly color?: string | null;
+  color?: string | null;
 
   @ApiProperty({ description: 'Number of non-deleted tasks in this category' })
-  readonly taskCount: number;
+  taskCount!: number;
 
   @ApiProperty({ type: String, description: 'Creation timestamp' })
-  readonly createdAt: string;
+  createdAt!: string;
 
   @ApiProperty({ type: String, description: 'Last update timestamp' })
-  readonly updatedAt: string;
-
-  constructor(category: ICategory) {
-    this.id = category.id;
-    this.name = category.name;
-    this.description = category.description ?? null;
-    this.color = category.color ?? null;
-    this.taskCount = category.taskCount ?? 0;
-    this.createdAt = category.createdAt.toISOString();
-    this.updatedAt = category.updatedAt.toISOString();
-  }
+  updatedAt!: string;
 }
+
+export const mapCategoryToResponse = (
+  category: ICategory,
+): CategoryResponse => ({
+  id: category.id,
+  name: category.name,
+  description: category.description ?? null,
+  color: category.color ?? null,
+  taskCount: category.taskCount ?? 0,
+  createdAt: category.createdAt.toISOString(),
+  updatedAt: category.updatedAt.toISOString(),
+});

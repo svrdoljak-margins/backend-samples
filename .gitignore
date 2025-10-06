@@ -2,6 +2,13 @@
 /dist
 /node_modules
 
+# documents files
+docs
+.docs
+/docs
+backend-samples/docs/codebase-documentation.md
+/docs/codebase-documentation.md
+
 # Logs
 logs
 *.log
@@ -42,3 +49,11 @@ lerna-debug.log*
 
 # ESLint cache
 .eslintcache
+
+
+docs/codebase-documentation.md
+docs/codebase-documentation.md
+
+AGENTS.md
+
+

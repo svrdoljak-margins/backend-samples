@@ -5,7 +5,7 @@ import {
   WinstonModuleOptionsFactory,
 } from 'nest-winston';
 import * as winston from 'winston';
-import * as DailyRotateFile from 'winston-daily-rotate-file';
+import DailyRotateFile from 'winston-daily-rotate-file';
 
 import { LogColor } from '../constants/log-color.enum';
 import { LogLevel } from '../constants/log-level';

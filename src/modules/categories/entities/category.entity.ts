@@ -5,6 +5,7 @@ import {
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
+  RelationCount,
   UpdateDateColumn,
 } from 'typeorm';
 
@@ -27,7 +28,10 @@ export class CategoryEntity {
   @OneToMany(() => TaskEntity, (task) => task.category)
   tasks?: TaskEntity[];
 
-  taskCount?: number;
+  @RelationCount((category: CategoryEntity) => category.tasks, 'task', (qb) =>
+    qb.andWhere('task.deletedAt IS NULL'),
+  )
+  taskCount!: number;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;

@@ -2,20 +2,20 @@
 
 import { INotificationTokenPair } from 'src/modules/firebase/interface/notification-token-pair.interface';
 
-export interface INotificationProvider {
+export abstract class AbstractNotificationProvider {
   /**
    * Sends notification to a single device.
    * @param pair - Pair of notification and device token.
    * @returns  Void
    **/
-  sendOneNotification(pair: INotificationTokenPair): Promise<void>;
+  abstract sendOneNotification(pair: INotificationTokenPair): Promise<void>;
 
   /**
    * Sends multiple notification, each notification to the corresponding device.
    * @param tokenPairs - Pairs of notification and device token.
    * @returns  Void
    */
-  sendMultipleNotifications(
+  abstract sendMultipleNotifications(
     tokenPairs: INotificationTokenPair[],
   ): Promise<void>;
 
@@ -24,7 +24,5 @@ export interface INotificationProvider {
    * @param pairs - Pairs of notification and device token.
    * @returns  Data in the format that the third-party service expects.
    */
-  mapNotificationData(...pairs: INotificationTokenPair[]): any;
+  abstract mapNotificationData(...pairs: INotificationTokenPair[]): any;
 }
-
-export const NotificationProviderToken = Symbol('NotificationProviderToken');

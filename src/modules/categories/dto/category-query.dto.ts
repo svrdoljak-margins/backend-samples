@@ -6,7 +6,9 @@ import { PaginationParams } from 'src/common/pagination/pagination-params';
 export class CategoryQueryDto extends PaginationParams {
   @ApiPropertyOptional({ description: 'Case-insensitive search over the name' })
   @IsOptional()
-  @IsString()
-  @MaxLength(80)
+  @IsString({ message: 'Search must be a string.' })
+  @MaxLength(80, {
+    message: 'Search must not exceed 80 characters.',
+  })
   readonly search?: string;
 }

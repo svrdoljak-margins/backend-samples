@@ -11,8 +11,8 @@ export class PaginationParams implements IPaginationParams {
     default: 1,
   })
   @Type(() => Number)
-  @IsNumber()
-  @Min(1)
+  @IsNumber({}, { message: 'Page must be a number.' })
+  @Min(1, { message: 'Page must be at least 1.' })
   @IsOptional()
   readonly page: number = 1;
 
@@ -23,9 +23,9 @@ export class PaginationParams implements IPaginationParams {
     default: 10,
   })
   @Type(() => Number)
-  @IsNumber()
-  @Min(1)
-  @Max(50)
+  @IsNumber({}, { message: 'Limit must be a number.' })
+  @Min(1, { message: 'Limit must be at least 1.' })
+  @Max(50, { message: 'Limit must not exceed 50.' })
   @IsOptional()
   readonly limit: number = 10;
 

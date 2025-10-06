@@ -11,3 +11,9 @@ npm run compodoc
 ```
 
 After that, generated documentation will be available in the `documentation` folder
+
+## Domain modules
+
+- **Category module** – CRUD operations for task categories with soft deletion and task counts.
+- **Task module** – TypeORM-backed tasks with filtering, sorting, pagination, and soft delete.
+- **Planning module** – Gemini-powered task breakdown API with heuristic fallback and configurable generation parameters.

@@ -1,7 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
 
-import { ProjectAbbrvValidationException } from './custom.exception';
+import { TaskManagerValidationException } from './custom.exception';
 
 const DEFAULT_MSG = 'Validation failed. Please try again.';
 
@@ -24,6 +24,6 @@ export const customValidationPipe = new ValidationPipe({
       }
     }
 
-    return new ProjectAbbrvValidationException(msg ?? DEFAULT_MSG);
+    return new TaskManagerValidationException(msg ?? DEFAULT_MSG);
   },
 });

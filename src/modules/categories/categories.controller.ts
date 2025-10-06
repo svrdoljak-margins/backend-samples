@@ -14,17 +14,22 @@ import {
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
 
 import { ApiPaginatedResponse } from 'src/common/pagination/paginated-response.decorator';
 import { PaginationModel } from 'src/common/pagination/paginaton.model';
+import { UuidParamDto } from 'src/common/dto/uuid-param.dto';
 
 import { AbstractCategoryService } from './abstract/category.abstract.service';
 import { CategoryQueryDto } from './dto/category-query.dto';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { CategoryResponse } from './responses/category.response';
+import {
+  CategoryResponse,
+  mapCategoryToResponse,
+} from './responses/category.response';
 
 @ApiTags('Categories')
 @Controller({ path: 'categories', version: '1' })
@@ -32,21 +37,25 @@ export class CategoryController {
   constructor(private readonly categoryService: AbstractCategoryService) {}
 
   @Post()
-  @ApiCreatedResponse({ type: CategoryResponse })
+  @ApiOperation({ summary: 'Create a new category' })
+  @ApiCreatedResponse({
+    status: HttpStatus.CREATED,
+    description: 'Category created successfully.',
+    type: CategoryResponse,
+  })
   async create(@Body() dto: CreateCategoryDto): Promise<CategoryResponse> {
     const category = await this.categoryService.create(dto);
-    return new CategoryResponse(category);
+    return mapCategoryToResponse(category);
   }
 
   @Get()
+  @ApiOperation({ summary: 'List categories' })
   @ApiPaginatedResponse(CategoryResponse)
   async findAll(
     @Query() query: CategoryQueryDto,
   ): Promise<PaginationModel<CategoryResponse>> {
     const categories = await this.categoryService.findAll(query);
-    const items = categories.items.map(
-      (category) => new CategoryResponse(category),
-    );
+    const items = categories.items.map(mapCategoryToResponse);
 
     return new PaginationModel<CategoryResponse>(
       items,
@@ -56,26 +65,40 @@ export class CategoryController {
   }
 
   @Get(':id')
-  @ApiOkResponse({ type: CategoryResponse })
-  async findOne(@Param('id') id: string): Promise<CategoryResponse> {
+  @ApiOperation({ summary: 'Get a category by id' })
+  @ApiOkResponse({
+    status: HttpStatus.OK,
+    description: 'Category returned successfully.',
+    type: CategoryResponse,
+  })
+  async findOne(@Param() { id }: UuidParamDto): Promise<CategoryResponse> {
     const category = await this.categoryService.findOne(id);
-    return new CategoryResponse(category);
+    return mapCategoryToResponse(category);
   }
 
   @Patch(':id')
-  @ApiOkResponse({ type: CategoryResponse })
+  @ApiOperation({ summary: 'Update a category' })
+  @ApiOkResponse({
+    status: HttpStatus.OK,
+    description: 'Category updated successfully.',
+    type: CategoryResponse,
+  })
   async update(
-    @Param('id') id: string,
+    @Param() { id }: UuidParamDto,
     @Body() dto: UpdateCategoryDto,
   ): Promise<CategoryResponse> {
     const category = await this.categoryService.update(id, dto);
-    return new CategoryResponse(category);
+    return mapCategoryToResponse(category);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiNoContentResponse({ description: 'Category soft-deleted successfully' })
-  async remove(@Param('id') id: string): Promise<void> {
+  @ApiOperation({ summary: 'Soft delete a category' })
+  @ApiNoContentResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'Category soft-deleted successfully.',
+  })
+  async remove(@Param() { id }: UuidParamDto): Promise<void> {
     await this.categoryService.remove(id);
   }
 }

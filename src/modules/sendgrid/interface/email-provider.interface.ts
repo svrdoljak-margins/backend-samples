@@ -20,13 +20,11 @@ export type TEmailProviderContent =
   | EmailProviderDynamicContent
   | EmailProviderStaticContent;
 
-export interface IEmailProvider {
+export abstract class AbstractEmailProvider {
   /**
    * Sends an email through the email provider.
    * @param msg - The message to be sent.
    * @returns  Void
    */
-  sendEmail(msg: TEmailProviderContent): Promise<void>;
+  abstract sendEmail(msg: TEmailProviderContent): Promise<void>;
 }
-
-export const EmailProviderToken = Symbol('EmailProviderService');

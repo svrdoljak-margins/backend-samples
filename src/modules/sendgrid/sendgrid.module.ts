@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
 
-import { EmailProviderToken } from './interface/email-provider.interface';
+import { AbstractEmailProvider } from './interface/email-provider.interface';
 import { SendgridEmailService } from './providers/sendgrid.service';
 
 @Module({
   providers: [
     SendgridEmailService,
     {
-      provide: EmailProviderToken,
+      provide: AbstractEmailProvider,
       useExisting: SendgridEmailService,
     },
   ],
-  exports: [EmailProviderToken],
+  exports: [AbstractEmailProvider],
 })
 export class SendgridModule {}

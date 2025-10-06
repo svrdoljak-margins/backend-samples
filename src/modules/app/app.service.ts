@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { NodeConfig, ProjectConfig } from 'src/common/config/env.validation';
 import { Environment } from 'src/common/constants/environment.enum';
-import { ProjectAbbrvConflictException } from 'src/common/exceptions/custom.exception';
+import { TaskManagerConflictException } from 'src/common/exceptions/custom.exception';
 import { ExceptionName } from 'src/common/exceptions/custom.exception.enum';
 import { ICustomExceptionInfo } from 'src/common/exceptions/exception-info.interface';
 import { exceptionMetadata } from 'src/common/exceptions/metadata.exception';
@@ -34,7 +34,7 @@ export class AppService implements IHealthCheckService {
    */
   getExceptionMetadata(): Record<ExceptionName, ICustomExceptionInfo> {
     if (this.nodeConfig.ENV !== Environment.Development) {
-      throw new ProjectAbbrvConflictException(
+      throw new TaskManagerConflictException(
         'This endpoint is available only in development environment',
       );
     }
