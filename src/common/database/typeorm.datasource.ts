@@ -15,6 +15,12 @@ import { TypeOrmConfigService } from './typeorm-config.service';
 
 loadEnv();
 
+/**
+ * Validates raw configuration data against the provided class schema.
+ * @param cls - Class constructor used for validation.
+ * @param data - Raw configuration values to validate.
+ * @returns A validated configuration instance.
+ */
 function validateConfig<T>(cls: new () => T, data: Partial<T>): T {
   const instance = plainToInstance(cls, data, {
     enableImplicitConversion: false,

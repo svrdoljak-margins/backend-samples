@@ -10,22 +10,39 @@ import { ITask } from '../interface/task.interface';
  * persistence details and return plain task interfaces.
  */
 export abstract class AbstractTaskService {
-  /** Creates a new task. */
+  /**
+   * Creates a new task record.
+   * @param dto - Task payload describing the entity to create.
+   * @returns The persisted task DTO.
+   */
   abstract create(dto: CreateTaskDto): Promise<ITask>;
 
-  /** Retrieves paginated tasks matching the supplied query. */
+  /**
+   * Retrieves tasks using pagination options.
+   * @param query - Pagination and filtering criteria.
+   * @returns Paginated task DTOs.
+   */
   abstract findAll(query: TaskQueryDto): Promise<PaginationModel<ITask>>;
 
   /**
-   * Finds a single task by id.
-   * @param id - Unique identifier of the task.
-   * @param includeArchived - Include soft-deleted records when true.
+   * Fetches a task by identifier.
+   * @param id - Task identifier.
+   * @param includeArchived - When true, includes soft-deleted records.
+   * @returns The matching task DTO.
    */
   abstract findOne(id: string, includeArchived?: boolean): Promise<ITask>;
 
-  /** Updates an existing task. */
+  /**
+   * Updates a task with the provided data.
+   * @param id - Task identifier.
+   * @param dto - Update payload.
+   * @returns The updated task DTO.
+   */
   abstract update(id: string, dto: UpdateTaskDto): Promise<ITask>;
 
-  /** Soft deletes a task. */
+  /**
+   * Soft deletes a task.
+   * @param id - Task identifier.
+   */
   abstract remove(id: string): Promise<void>;
 }

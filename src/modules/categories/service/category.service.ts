@@ -20,6 +20,11 @@ export class CategoryService extends AbstractCategoryService {
     super();
   }
 
+  /**
+   * Creates a new category and ensures the name is unique.
+   * @param dto - Data describing the category to create.
+   * @returns The persisted category DTO.
+   */
   async create(dto: CreateCategoryDto): Promise<ICategory> {
     const normalizedName = dto.name.trim();
     await this.assertNameIsUnique(normalizedName);
@@ -31,10 +36,20 @@ export class CategoryService extends AbstractCategoryService {
     });
   }
 
+  /**
+   * Retrieves categories using pagination utilities from the repository.
+   * @param query - Pagination and filter options.
+   * @returns Paginated categories enriched with task counts.
+   */
   async findAll(query: CategoryQueryDto): Promise<PaginationModel<ICategory>> {
     return this.categoryRepository.findPaginatedWithTaskCount(query);
   }
 
+  /**
+   * Fetches a single category, throwing when missing.
+   * @param id - Category identifier.
+   * @returns The requested category DTO.
+   */
   async findOne(id: string): Promise<ICategory> {
     const category = await this.categoryRepository.findOneWithTaskCount(id);
 
@@ -45,6 +60,12 @@ export class CategoryService extends AbstractCategoryService {
     return category;
   }
 
+  /**
+   * Updates an existing category by merging the provided changes.
+   * @param id - Category identifier.
+   * @param dto - Update payload.
+   * @returns The updated category DTO.
+   */
   async update(id: string, dto: UpdateCategoryDto): Promise<ICategory> {
     const category = await this.categoryRepository.findActiveById(id);
 
@@ -60,6 +81,10 @@ export class CategoryService extends AbstractCategoryService {
     return this.findOne(id);
   }
 
+  /**
+   * Soft deletes a category.
+   * @param id - Category identifier.
+   */
   async remove(id: string): Promise<void> {
     await this.categoryRepository.softDeleteById(id);
   }

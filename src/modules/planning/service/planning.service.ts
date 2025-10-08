@@ -26,6 +26,11 @@ export class PlanningService extends AbstractPlanningService {
     super();
   }
 
+  /**
+   * Generates a task breakdown and usage metrics, falling back to heuristics when necessary.
+   * @param request - Planning request payload.
+   * @returns Task breakdown response.
+   */
   async generateTaskBreakdown(
     request: TaskBreakdownRequestDto,
   ): Promise<TaskBreakdownResponse> {

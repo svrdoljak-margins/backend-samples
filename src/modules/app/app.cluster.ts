@@ -14,6 +14,11 @@ const cluster_ = cluster as unknown as cluster.Cluster;
 @Injectable()
 export class AppClusterService {
   private static logger = new Logger(AppClusterService.name);
+  /**
+   * Spawns worker processes when clustering is enabled.
+   * @param callback - Bootstrap function executed by each worker.
+   * @returns True when clustering handled the bootstrap, false otherwise.
+   */
   static clusterize(callback: any): boolean {
     // Do not use cluster if there is only one CPU (Due to simplicity)
     if (NUM_CPUS === 1) {

@@ -15,6 +15,11 @@ export class TaskManagerExceptionFilter
 {
   private readonly logger = new Logger(TaskManagerExceptionFilter.name);
 
+  /**
+   * Handles TaskManagerException and serialises it into an HTTP response.
+   * @param exception - Captured domain exception.
+   * @param host - Execution context supplied by Nest.
+   */
   catch(exception: TaskManagerException, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();

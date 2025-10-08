@@ -21,14 +21,17 @@ export class TaskRepository extends AbstractTaskRepository {
     super();
   }
 
+  /** @inheritdoc */
   initialize(): TaskEntity {
     return this.repo.create();
   }
 
+  /** @inheritdoc */
   async save(task: TaskEntity): Promise<TaskEntity> {
     return this.repo.save(task);
   }
 
+  /** @inheritdoc */
   async findPaginated(
     query: TaskQueryDto,
   ): Promise<PaginationModel<ITask>> {
@@ -56,6 +59,7 @@ export class TaskRepository extends AbstractTaskRepository {
     return new PaginationModel<ITask>(items, query, count);
   }
 
+  /** @inheritdoc */
   async findDetailedById(
     id: string,
     includeArchived = false,
@@ -65,6 +69,7 @@ export class TaskRepository extends AbstractTaskRepository {
     return qb.getOne();
   }
 
+  /** @inheritdoc */
   async findActiveWithCategory(id: string): Promise<TaskEntity | null> {
     return this.repo.findOne({
       where: { id, deletedAt: IsNull() },
@@ -72,6 +77,7 @@ export class TaskRepository extends AbstractTaskRepository {
     });
   }
 
+  /** @inheritdoc */
   async softDeleteById(id: string): Promise<void> {
     const task = await this.repo.findOne({ where: { id }, withDeleted: true });
 
@@ -82,6 +88,7 @@ export class TaskRepository extends AbstractTaskRepository {
     await this.repo.softRemove(task);
   }
 
+  /** @inheritdoc */
   mapToInterface(task: TaskEntity): ITask {
     return {
       id: task.id,

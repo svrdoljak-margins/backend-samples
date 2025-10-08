@@ -17,6 +17,10 @@ export abstract class TaskManagerException extends Error {
     this.exceptionInfo.detail = message;
   }
 
+  /**
+   * Provides a human-readable representation of the exception.
+   * @returns String containing exception metadata.
+   */
   public toString = (): string => {
     return `${this.exceptionName} exception:\n${this.exceptionInfo}`;
   };

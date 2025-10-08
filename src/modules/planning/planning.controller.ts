@@ -18,6 +18,11 @@ export class PlanningController {
     description: 'Task breakdown generated successfully.',
     type: TaskBreakdownResponse,
   })
+  /**
+   * Generates a task breakdown using the planning service.
+   * @param request - Request payload containing planning context.
+   * @returns Task breakdown response.
+   */
   generateTaskBreakdown(
     @Body() request: TaskBreakdownRequestDto,
   ): Promise<TaskBreakdownResponse> {

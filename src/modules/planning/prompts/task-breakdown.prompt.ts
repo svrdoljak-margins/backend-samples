@@ -2,6 +2,11 @@ import { TaskBreakdownRequestDto } from '../dto/task-breakdown-request.dto';
 
 const SEPARATOR = '\n---\n';
 
+/**
+ * Builds the prompt sent to the LLM for generating task breakdowns.
+ * @param request - Planning request payload.
+ * @returns Prompt string for the LLM.
+ */
 export const buildTaskBreakdownPrompt = (
   request: TaskBreakdownRequestDto,
 ): string => {
@@ -33,6 +38,12 @@ export const buildTaskBreakdownPrompt = (
   return [...baseLines, ...optionalSections, closingLine].join('\n');
 };
 
+/**
+ * Formats a single-line text section for the prompt.
+ * @param label - Section label.
+ * @param value - Optional text value.
+ * @returns Formatted section or null when empty.
+ */
 const formatTextSection = (
   label: string,
   value?: string | null,
@@ -45,6 +56,13 @@ const formatTextSection = (
   return trimmed ? `${label}: ${trimmed}` : null;
 };
 
+/**
+ * Formats a list of values into a single prompt section.
+ * @param label - Section label.
+ * @param values - Values to include.
+ * @param separator - Separator between values.
+ * @returns Formatted section or null when empty.
+ */
 const formatListSection = (
   label: string,
   values?: string[],

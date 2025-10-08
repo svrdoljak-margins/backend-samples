@@ -43,6 +43,11 @@ export class CategoryController {
     description: 'Category created successfully.',
     type: CategoryResponse,
   })
+  /**
+   * Creates a category.
+   * @param dto - Payload describing the category to create.
+   * @returns Newly created category response.
+   */
   async create(@Body() dto: CreateCategoryDto): Promise<CategoryResponse> {
     const category = await this.categoryService.create(dto);
     return mapCategoryToResponse(category);
@@ -51,6 +56,11 @@ export class CategoryController {
   @Get()
   @ApiOperation({ summary: 'List categories' })
   @ApiPaginatedResponse(CategoryResponse)
+  /**
+   * Lists categories using pagination query params.
+   * @param query - Pagination and filtering options.
+   * @returns Paginated category responses.
+   */
   async findAll(
     @Query() query: CategoryQueryDto,
   ): Promise<PaginationModel<CategoryResponse>> {
@@ -71,6 +81,11 @@ export class CategoryController {
     description: 'Category returned successfully.',
     type: CategoryResponse,
   })
+  /**
+   * Retrieves a single category.
+   * @param param - Route parameter DTO containing the identifier.
+   * @returns Category response.
+   */
   async findOne(@Param() { id }: UuidParamDto): Promise<CategoryResponse> {
     const category = await this.categoryService.findOne(id);
     return mapCategoryToResponse(category);
@@ -83,6 +98,12 @@ export class CategoryController {
     description: 'Category updated successfully.',
     type: CategoryResponse,
   })
+  /**
+   * Updates a category.
+   * @param param - Route parameter DTO containing the identifier.
+   * @param dto - Update payload.
+   * @returns Updated category response.
+   */
   async update(
     @Param() { id }: UuidParamDto,
     @Body() dto: UpdateCategoryDto,
@@ -98,6 +119,10 @@ export class CategoryController {
     status: HttpStatus.NO_CONTENT,
     description: 'Category soft-deleted successfully.',
   })
+  /**
+   * Soft deletes a category.
+   * @param param - Route parameter DTO containing the identifier.
+   */
   async remove(@Param() { id }: UuidParamDto): Promise<void> {
     await this.categoryService.remove(id);
   }

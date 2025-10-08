@@ -16,6 +16,10 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
     private readonly projectConfig: ProjectConfig,
   ) {}
 
+  /**
+   * Builds TypeORM module options based on validated configuration.
+   * @returns TypeORM configuration object for Nest integration.
+   */
   createTypeOrmOptions(): TypeOrmModuleOptions {
     const isDevelopment = this.nodeConfig.ENV === Environment.Development;
 

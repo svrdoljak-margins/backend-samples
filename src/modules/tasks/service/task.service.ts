@@ -28,6 +28,11 @@ export class TaskService extends AbstractTaskService {
     super();
   }
 
+  /**
+   * Creates a task aggregate and returns its DTO form.
+   * @param dto - Task payload supplied by the client.
+   * @returns Persisted task DTO.
+   */
   async create(dto: CreateTaskDto): Promise<ITask> {
     const task = this.taskRepository.initialize();
     await this.applyDto(task, dto);
@@ -36,10 +41,21 @@ export class TaskService extends AbstractTaskService {
     return this.findOne(saved.id);
   }
 
+  /**
+   * Retrieves tasks using repository pagination helpers.
+   * @param query - Pagination and filter criteria.
+   * @returns Paginated task DTOs.
+   */
   async findAll(query: TaskQueryDto): Promise<PaginationModel<ITask>> {
     return this.taskRepository.findPaginated(query);
   }
 
+  /**
+   * Loads a task by identifier.
+   * @param id - Task identifier.
+   * @param includeArchived - When true, includes soft-deleted records.
+   * @returns Task DTO or throws when missing.
+   */
   async findOne(id: string, includeArchived = false): Promise<ITask> {
     const task = await this.taskRepository.findDetailedById(id, includeArchived);
 
@@ -50,6 +66,12 @@ export class TaskService extends AbstractTaskService {
     return this.taskRepository.mapToInterface(task);
   }
 
+  /**
+   * Updates an existing task and returns the DTO.
+   * @param id - Task identifier.
+   * @param dto - Update payload.
+   * @returns Updated task DTO.
+   */
   async update(id: string, dto: UpdateTaskDto): Promise<ITask> {
     const task = await this.taskRepository.findActiveWithCategory(id);
 
@@ -63,6 +85,10 @@ export class TaskService extends AbstractTaskService {
     return this.findOne(id);
   }
 
+  /**
+   * Soft deletes a task by identifier.
+   * @param id - Task identifier.
+   */
   async remove(id: string): Promise<void> {
     await this.taskRepository.softDeleteById(id);
   }

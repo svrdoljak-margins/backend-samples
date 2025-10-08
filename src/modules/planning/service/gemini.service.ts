@@ -14,6 +14,11 @@ export class GeminiService {
     private readonly geminiConfig: LLMGeminiConfig,
   ) {}
 
+  /**
+   * Invokes the Gemini API to generate content for the supplied prompt.
+   * @param prompt - Prompt string used for generation.
+   * @returns Gemini response payload.
+   */
   async generateContent(
     prompt: string,
   ): Promise<GeminiGenerateContentResponse> {

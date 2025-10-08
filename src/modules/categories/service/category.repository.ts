@@ -25,12 +25,14 @@ export class CategoryRepository extends AbstractCategoryRepository {
     super();
   }
 
+  /** @inheritdoc */
   async createCategory(data: Partial<CategoryEntity>): Promise<ICategory> {
     const category = this.categoryRepo.create(data);
     const saved = await this.categoryRepo.save(category);
     return this.mapToInterface(saved);
   }
 
+  /** @inheritdoc */
   async findPaginatedWithTaskCount(
     query: CategoryQueryDto,
   ): Promise<PaginationModel<ICategory>> {
@@ -49,6 +51,7 @@ export class CategoryRepository extends AbstractCategoryRepository {
     return new PaginationModel(mappedItems, query, count);
   }
 
+  /** @inheritdoc */
   async findOneWithTaskCount(id: string): Promise<ICategory | null> {
     const category = await this.buildTaskCountQuery()
       .where('category.id = :id', { id })
@@ -58,17 +61,20 @@ export class CategoryRepository extends AbstractCategoryRepository {
     return this.mapToInterfaceNullable(category);
   }
 
+  /** @inheritdoc */
   async findActiveById(id: string): Promise<CategoryEntity | null> {
     return this.categoryRepo.findOne({
       where: { id, deletedAt: IsNull() },
     });
   }
 
+  /** @inheritdoc */
   async save(category: CategoryEntity): Promise<ICategory> {
     const saved = await this.categoryRepo.save(category);
     return this.mapToInterface(saved);
   }
 
+  /** @inheritdoc */
   async softDeleteById(id: string): Promise<void> {
     const category = await this.categoryRepo.findOne({
       where: { id },
@@ -82,6 +88,7 @@ export class CategoryRepository extends AbstractCategoryRepository {
     await this.categoryRepo.softRemove(category);
   }
 
+  /** @inheritdoc */
   async findByNameCaseInsensitive(
     name: string,
     excludeId?: string,
