@@ -10,6 +10,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import {
   ApiCreatedResponse,
   ApiNoContentResponse,
@@ -26,10 +27,9 @@ import { AbstractCategoryService } from './abstract/category.abstract.service';
 import { CategoryQueryDto } from './dto/category-query.dto';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import {
-  CategoryResponse,
-  mapCategoryToResponse,
-} from './responses/category.response';
+import { CategoryResponse } from './responses/category.response';
+import { ICreateCategoryInput } from './interface/create-category-input.interface';
+import { IUpdateCategoryInput } from './interface/update-category-input.interface';
 
 @ApiTags('Categories')
 @Controller({ path: 'categories', version: '1' })
@@ -49,8 +49,16 @@ export class CategoryController {
    * @returns Newly created category response.
    */
   async create(@Body() dto: CreateCategoryDto): Promise<CategoryResponse> {
-    const category = await this.categoryService.create(dto);
-    return mapCategoryToResponse(category);
+    const payload: ICreateCategoryInput = {
+      name: dto.name,
+      description: dto.description,
+      color: dto.color,
+    };
+
+    const category = await this.categoryService.create(payload);
+    return plainToInstance(CategoryResponse, category, {
+      excludeExtraneousValues: true,
+    });
   }
 
   @Get()
@@ -65,7 +73,9 @@ export class CategoryController {
     @Query() query: CategoryQueryDto,
   ): Promise<PaginationModel<CategoryResponse>> {
     const categories = await this.categoryService.findAll(query);
-    const items = categories.items.map(mapCategoryToResponse);
+    const items = plainToInstance(CategoryResponse, categories.items, {
+      excludeExtraneousValues: true,
+    });
 
     return new PaginationModel<CategoryResponse>(
       items,
@@ -88,7 +98,9 @@ export class CategoryController {
    */
   async findOne(@Param() { id }: UuidParamDto): Promise<CategoryResponse> {
     const category = await this.categoryService.findOne(id);
-    return mapCategoryToResponse(category);
+    return plainToInstance(CategoryResponse, category, {
+      excludeExtraneousValues: true,
+    });
   }
 
   @Patch(':id')
@@ -108,8 +120,16 @@ export class CategoryController {
     @Param() { id }: UuidParamDto,
     @Body() dto: UpdateCategoryDto,
   ): Promise<CategoryResponse> {
-    const category = await this.categoryService.update(id, dto);
-    return mapCategoryToResponse(category);
+    const payload: IUpdateCategoryInput = {
+      name: dto.name,
+      description: dto.description,
+      color: dto.color,
+    };
+
+    const category = await this.categoryService.update(id, payload);
+    return plainToInstance(CategoryResponse, category, {
+      excludeExtraneousValues: true,
+    });
   }
 
   @Delete(':id')

@@ -7,7 +7,6 @@ import {
 import { PaginationModel } from '../../../common/pagination/paginaton.model';
 import { AbstractCategoryRepository } from '../abstract/category.abstract.repository';
 import { CategoryService } from '../service/category.service';
-import { CategoryEntity } from '../entities/category.entity';
 import { ICategory } from '../interface/category.interface';
 
 const createRepositoryMock = (): jest.Mocked<AbstractCategoryRepository> => ({
@@ -15,7 +14,7 @@ const createRepositoryMock = (): jest.Mocked<AbstractCategoryRepository> => ({
   findPaginatedWithTaskCount: jest.fn(),
   findOneWithTaskCount: jest.fn(),
   findActiveById: jest.fn(),
-  save: jest.fn(),
+  updateCategory: jest.fn(),
   softDeleteById: jest.fn(),
   findByNameCaseInsensitive: jest.fn(),
 });
@@ -118,7 +117,7 @@ describe('CategoryService', () => {
   });
 
   it('updates fields and enforces uniqueness during update', async () => {
-    const existing: CategoryEntity = {
+    const existing: ICategory = {
       id: 'cat-1',
       name: 'Engineering',
       description: 'Delivery team',
@@ -126,31 +125,21 @@ describe('CategoryService', () => {
       createdAt: new Date('2024-01-01T00:00:00.000Z'),
       updatedAt: new Date('2024-01-01T00:00:00.000Z'),
       deletedAt: null,
-    } as CategoryEntity;
+      taskCount: 3,
+    };
 
-    const updatedEntity: CategoryEntity = {
+    const updatedCategory: ICategory = {
       ...existing,
       name: 'Delivery',
       color: '#FFAA00',
       description: 'Hands over work',
       updatedAt: new Date('2024-01-02T00:00:00.000Z'),
-    } as CategoryEntity;
-
-    const savedCategory: ICategory = {
-      id: updatedEntity.id,
-      name: updatedEntity.name,
-      description: updatedEntity.description ?? null,
-      color: updatedEntity.color ?? null,
-      createdAt: updatedEntity.createdAt,
-      updatedAt: updatedEntity.updatedAt,
-      deletedAt: updatedEntity.deletedAt ?? null,
-      taskCount: 0,
+      taskCount: 5,
     };
 
     repository.findActiveById.mockResolvedValueOnce(existing);
     repository.findByNameCaseInsensitive.mockResolvedValueOnce(null);
-    repository.save.mockResolvedValueOnce(savedCategory);
-    repository.findOneWithTaskCount.mockResolvedValueOnce(savedCategory);
+    repository.updateCategory.mockResolvedValueOnce(updatedCategory);
 
     const response = await service.update(existing.id, {
       name: '  Delivery  ',
@@ -158,17 +147,12 @@ describe('CategoryService', () => {
       color: '#ffaa00',
     });
 
-    expect(repository.save).toHaveBeenCalledWith(
-      expect.objectContaining({
-        name: 'Delivery',
-        description: 'Hands over work',
-        color: '#FFAA00',
-      }),
-    );
-    expect(repository.findOneWithTaskCount).toHaveBeenCalledWith(existing.id);
-    expect(response).toEqual(
-      expect.objectContaining({ name: 'Delivery', color: '#FFAA00' }),
-    );
+    expect(repository.updateCategory).toHaveBeenCalledWith(existing.id, {
+      name: 'Delivery',
+      description: 'Hands over work',
+      color: '#FFAA00',
+    });
+    expect(response).toEqual(updatedCategory);
   });
 
   it('removes a category via repository', async () => {

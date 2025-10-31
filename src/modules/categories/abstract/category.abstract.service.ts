@@ -1,9 +1,9 @@
 import { PaginationModel } from 'src/common/pagination/paginaton.model';
 
 import { CategoryQueryDto } from '../dto/category-query.dto';
-import { CreateCategoryDto } from '../dto/create-category.dto';
-import { UpdateCategoryDto } from '../dto/update-category.dto';
 import { ICategory } from '../interface/category.interface';
+import { ICreateCategoryInput } from '../interface/create-category-input.interface';
+import { IUpdateCategoryInput } from '../interface/update-category-input.interface';
 
 export abstract class AbstractCategoryService {
   /**
@@ -11,7 +11,7 @@ export abstract class AbstractCategoryService {
    * @param dto - Data describing the category to create.
    * @returns The created category representation.
    */
-  abstract create(dto: CreateCategoryDto): Promise<ICategory>;
+  abstract create(data: ICreateCategoryInput): Promise<ICategory>;
 
   /**
    * Lists categories with pagination and task counts applied.
@@ -35,7 +35,7 @@ export abstract class AbstractCategoryService {
    * @param dto - Properties to update.
    * @returns The updated category representation.
    */
-  abstract update(id: string, dto: UpdateCategoryDto): Promise<ICategory>;
+  abstract update(id: string, data: IUpdateCategoryInput): Promise<ICategory>;
 
   /**
    * Soft deletes the category if it exists.

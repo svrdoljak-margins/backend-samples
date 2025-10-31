@@ -1,16 +1,17 @@
 import { PaginationModel } from 'src/common/pagination/paginaton.model';
 
 import { CategoryQueryDto } from '../dto/category-query.dto';
-import { CategoryEntity } from '../entities/category.entity';
 import { ICategory } from '../interface/category.interface';
+import { ICreateCategoryInput } from '../interface/create-category-input.interface';
+import { IUpdateCategoryInput } from '../interface/update-category-input.interface';
 
 export abstract class AbstractCategoryRepository {
   /**
-   * Creates and persists a new category entity.
-   * @param data - Partial category data used to build the entity.
+   * Creates and persists a new category.
+   * @param data - Category creation payload.
    * @returns The persisted category DTO.
    */
-  abstract createCategory(data: Partial<CategoryEntity>): Promise<ICategory>;
+  abstract createCategory(data: ICreateCategoryInput): Promise<ICategory>;
 
   /**
    * Retrieves categories with pagination metadata and task counts.
@@ -29,18 +30,22 @@ export abstract class AbstractCategoryRepository {
   abstract findOneWithTaskCount(id: string): Promise<ICategory | null>;
 
   /**
-   * Finds an active (non-deleted) category entity by id.
+   * Finds an active (non-deleted) category by id.
    * @param id - Category identifier.
-   * @returns The category entity or null if it does not exist.
+   * @returns The category DTO or null if it does not exist.
    */
-  abstract findActiveById(id: string): Promise<CategoryEntity | null>;
+  abstract findActiveById(id: string): Promise<ICategory | null>;
 
   /**
-   * Persists the provided category entity.
-   * @param category - Category entity to store.
-   * @returns The stored category DTO.
+   * Applies updates to an existing category.
+   * @param id - Category identifier.
+   * @param data - Properties to update.
+   * @returns The updated category DTO.
    */
-  abstract save(category: CategoryEntity): Promise<ICategory>;
+  abstract updateCategory(
+    id: string,
+    data: IUpdateCategoryInput,
+  ): Promise<ICategory>;
 
   /**
    * Soft deletes a category by its identifier.

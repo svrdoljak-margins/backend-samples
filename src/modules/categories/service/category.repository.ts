@@ -15,6 +15,8 @@ import { AbstractCategoryRepository } from '../abstract/category.abstract.reposi
 import { CategoryQueryDto } from '../dto/category-query.dto';
 import { CategoryEntity } from '../entities/category.entity';
 import { ICategory } from '../interface/category.interface';
+import { ICreateCategoryInput } from '../interface/create-category-input.interface';
+import { IUpdateCategoryInput } from '../interface/update-category-input.interface';
 
 @Injectable()
 export class CategoryRepository extends AbstractCategoryRepository {
@@ -26,8 +28,12 @@ export class CategoryRepository extends AbstractCategoryRepository {
   }
 
   /** @inheritdoc */
-  async createCategory(data: Partial<CategoryEntity>): Promise<ICategory> {
-    const category = this.categoryRepo.create(data);
+  async createCategory(data: ICreateCategoryInput): Promise<ICategory> {
+    const category = this.categoryRepo.create({
+      name: data.name,
+      description: data.description ?? null,
+      color: data.color ?? null,
+    });
     const saved = await this.categoryRepo.save(category);
     return this.mapToInterface(saved);
   }
@@ -62,16 +68,45 @@ export class CategoryRepository extends AbstractCategoryRepository {
   }
 
   /** @inheritdoc */
-  async findActiveById(id: string): Promise<CategoryEntity | null> {
-    return this.categoryRepo.findOne({
+  async findActiveById(id: string): Promise<ICategory | null> {
+    const category = await this.categoryRepo.findOne({
       where: { id, deletedAt: IsNull() },
     });
+
+    return this.mapToInterfaceNullable(category);
   }
 
   /** @inheritdoc */
-  async save(category: CategoryEntity): Promise<ICategory> {
-    const saved = await this.categoryRepo.save(category);
-    return this.mapToInterface(saved);
+  async updateCategory(
+    id: string,
+    data: IUpdateCategoryInput,
+  ): Promise<ICategory> {
+    const category = await this.categoryRepo.findOne({
+      where: { id, deletedAt: IsNull() },
+    });
+
+    if (!category) {
+      throw new Error('Category not found');
+    }
+
+    if (data.name !== undefined) {
+      category.name = data.name;
+    }
+
+    if (data.description !== undefined) {
+      category.description = data.description ?? null;
+    }
+
+    if (data.color !== undefined) {
+      category.color = data.color ?? null;
+    }
+
+    await this.categoryRepo.save(category);
+
+    const updated = await this.findOneWithTaskCount(id);
+
+    // findOneWithTaskCount should always return value after save; fallback to mapped entity otherwise.
+    return updated ?? this.mapToInterface(category);
   }
 
   /** @inheritdoc */

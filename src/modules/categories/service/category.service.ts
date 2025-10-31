@@ -9,10 +9,9 @@ import { PaginationModel } from 'src/common/pagination/paginaton.model';
 import { AbstractCategoryRepository } from '../abstract/category.abstract.repository';
 import { AbstractCategoryService } from '../abstract/category.abstract.service';
 import { CategoryQueryDto } from '../dto/category-query.dto';
-import { CreateCategoryDto } from '../dto/create-category.dto';
-import { UpdateCategoryDto } from '../dto/update-category.dto';
-import { CategoryEntity } from '../entities/category.entity';
 import { ICategory } from '../interface/category.interface';
+import { ICreateCategoryInput } from '../interface/create-category-input.interface';
+import { IUpdateCategoryInput } from '../interface/update-category-input.interface';
 
 @Injectable()
 export class CategoryService extends AbstractCategoryService {
@@ -25,14 +24,14 @@ export class CategoryService extends AbstractCategoryService {
    * @param dto - Data describing the category to create.
    * @returns The persisted category DTO.
    */
-  async create(dto: CreateCategoryDto): Promise<ICategory> {
-    const normalizedName = dto.name.trim();
+  async create(data: ICreateCategoryInput): Promise<ICategory> {
+    const normalizedName = data.name.trim();
     await this.assertNameIsUnique(normalizedName);
 
     return this.categoryRepository.createCategory({
       name: normalizedName,
-      description: dto.description?.trim() ?? null,
-      color: dto.color?.toUpperCase() ?? null,
+      description: data.description?.trim() ?? null,
+      color: data.color?.toUpperCase() ?? null,
     });
   }
 
@@ -66,19 +65,36 @@ export class CategoryService extends AbstractCategoryService {
    * @param dto - Update payload.
    * @returns The updated category DTO.
    */
-  async update(id: string, dto: UpdateCategoryDto): Promise<ICategory> {
-    const category = await this.categoryRepository.findActiveById(id);
+  async update(id: string, data: IUpdateCategoryInput): Promise<ICategory> {
+    const existing = await this.categoryRepository.findActiveById(id);
 
-    if (!category) {
+    if (!existing) {
       throw new TaskManagerNotFoundException('Category was not found');
     }
 
-    await this.updateNameIfNeeded(category, dto, id);
-    this.updateDescription(category, dto);
-    this.updateColor(category, dto);
+    const updatePayload: IUpdateCategoryInput = {};
 
-    await this.categoryRepository.save(category);
-    return this.findOne(id);
+    if (data.name !== undefined) {
+      const normalizedName = data.name.trim();
+      if (normalizedName !== existing.name) {
+        await this.assertNameIsUnique(normalizedName, id);
+      }
+      updatePayload.name = normalizedName;
+    }
+
+    if (data.description !== undefined) {
+      updatePayload.description = data.description?.trim() ?? null;
+    }
+
+    if (data.color !== undefined) {
+      updatePayload.color = data.color?.toUpperCase() ?? null;
+    }
+
+    if (Object.keys(updatePayload).length === 0) {
+      return this.findOne(id);
+    }
+
+    return this.categoryRepository.updateCategory(id, updatePayload);
   }
 
   /**
@@ -101,43 +117,5 @@ export class CategoryService extends AbstractCategoryService {
     if (existing) {
       throw new TaskManagerConflictException('Category name is already in use');
     }
-  }
-
-  private async updateNameIfNeeded(
-    category: CategoryEntity,
-    dto: UpdateCategoryDto,
-    id: string,
-  ): Promise<void> {
-    if (dto.name === undefined) {
-      return;
-    }
-
-    const normalizedName = dto.name.trim();
-
-    if (normalizedName === category.name) {
-      return;
-    }
-
-    await this.assertNameIsUnique(normalizedName, id);
-    category.name = normalizedName;
-  }
-
-  private updateDescription(
-    category: CategoryEntity,
-    dto: UpdateCategoryDto,
-  ): void {
-    if (dto.description === undefined) {
-      return;
-    }
-
-    category.description = dto.description?.trim() ?? null;
-  }
-
-  private updateColor(category: CategoryEntity, dto: UpdateCategoryDto): void {
-    if (dto.color === undefined) {
-      return;
-    }
-
-    category.color = dto.color?.toUpperCase() ?? null;
   }
 }
