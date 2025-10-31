@@ -5,7 +5,7 @@ import {
   WinstonModuleOptionsFactory,
 } from 'nest-winston';
 import * as winston from 'winston';
-import * as DailyRotateFile from 'winston-daily-rotate-file';
+import DailyRotateFile from 'winston-daily-rotate-file';
 
 import { LogColor } from '../constants/log-color.enum';
 import { LogLevel } from '../constants/log-level';
@@ -23,6 +23,10 @@ export class WinstonOptions implements WinstonModuleOptionsFactory {
   }
 
   private getLogFormat(): winston.Logform.Format {
+    /**
+     * Builds the log formatter used across transports.
+     * @returns Winston log format configuration.
+     */
     return winston.format.combine(
       winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
       winston.format.printf(
@@ -36,6 +40,10 @@ export class WinstonOptions implements WinstonModuleOptionsFactory {
   }
 
   private getLogTransports(): winston.transport[] {
+    /**
+     * Configures base log transports for file rotation.
+     * @returns Array of Winston transports.
+     */
     return [
       new DailyRotateFile({
         dirname: 'logs/',
@@ -58,6 +66,10 @@ export class WinstonOptions implements WinstonModuleOptionsFactory {
     ];
   }
 
+  /**
+   * Creates Winston module options consumed by Nest.
+   * @returns Winston options object.
+   */
   createWinstonModuleOptions(): WinstonModuleOptions {
     return {
       levels: LogLevel,

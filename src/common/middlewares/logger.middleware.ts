@@ -7,6 +7,7 @@ import {
 import { NextFunction, Request, Response } from 'express';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import * as requestIp from 'request-ip';
+/** Middleware that logs inbound HTTP requests using the configured logger. */
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
   constructor(
@@ -14,6 +15,12 @@ export class LoggerMiddleware implements NestMiddleware {
     private readonly logger: LoggerService,
   ) {}
 
+  /**
+   * Logs metadata about the request after the response finishes.
+   * @param request - Incoming HTTP request.
+   * @param response - Outgoing HTTP response.
+   * @param next - Express continuation callback.
+   */
   use(request: Request, response: Response, next: NextFunction): void {
     const startAt = process.hrtime();
     const { method, originalUrl } = request;

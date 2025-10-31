@@ -1,12 +1,13 @@
 import { VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
-import * as correlator from 'express-correlation-id';
+import correlator from 'express-correlation-id';
 import helmet from 'helmet';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 import { RootConfig } from './common/config/env.validation';
 import { customValidationPipe } from './common/exceptions/validation.pipe';
+import { TaskManagerExceptionFilter } from './common/exceptions/task-manager-exception.filter';
 import { createDocsAuthMiddleware } from './common/middlewares/docs-auth.middleware';
 import { ignoreFaviconMiddleware } from './common/middlewares/ignore-favicon.middleware';
 import { getSwaggerConfig } from './common/swagger/swagger.config';
@@ -24,6 +25,9 @@ async function bootstrap(): Promise<void> {
 
   // Logging
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
+
+  // Custom exception handling
+  app.useGlobalFilters(new TaskManagerExceptionFilter());
 
   // Input validation
   app.useGlobalPipes(customValidationPipe);

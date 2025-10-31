@@ -1,13 +1,12 @@
 /**
  * Metadata for project-specific exceptions.
  * Includes status code, error code, and default error message.
- * TODO Replace the "PROJECT_ABBRV" with your project's name.
  */
 
 import { ExceptionName } from './custom.exception.enum';
 import { ICustomExceptionInfo } from './exception-info.interface';
 
-const EXCEPTION_PREFIX = 'PROJECT_ABBRV';
+const EXCEPTION_PREFIX = 'TASKMGR';
 
 export const exceptionMetadata: Record<ExceptionName, ICustomExceptionInfo> = {
   INTERNAL_EXCEPTION: {

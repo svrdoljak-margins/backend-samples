@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
 
-import { FileStorageProviderToken } from './interface/file-storage-provider.interface';
+import { AbstractFileStorageProvider } from './abstract/file-storage.abstract.service';
 import { S3Service } from './s3.service';
 
 @Module({
   providers: [
     S3Service,
     {
-      provide: FileStorageProviderToken,
+      provide: AbstractFileStorageProvider,
       useExisting: S3Service,
     },
   ],
-  exports: [FileStorageProviderToken],
+  exports: [AbstractFileStorageProvider],
 })
 export class S3Module {}

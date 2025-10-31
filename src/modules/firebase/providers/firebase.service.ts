@@ -6,15 +6,16 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { FirebaseConfig } from 'src/common/config/env.validation';
 import { ChunkUtils } from 'src/common/utils/chunk.utils';
 
-import { INotificationProvider } from '../interface/notification-provider.interface';
+import { AbstractNotificationProvider } from '../interface/notification-provider.interface';
 import { INotificationTokenPair } from '../interface/notification-token-pair.interface';
 
 @Injectable()
-export class FirebaseService implements INotificationProvider {
+export class FirebaseService extends AbstractNotificationProvider {
   constructor(
     @Inject(WINSTON_MODULE_NEST_PROVIDER) private readonly logger: Logger,
     private readonly config: FirebaseConfig,
   ) {
+    super();
     Firebase.initializeApp({
       credential: Firebase.credential.cert({
         projectId: this.config.PROJECTID,

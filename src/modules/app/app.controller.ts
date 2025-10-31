@@ -21,6 +21,10 @@ export class AppController {
     description: 'Health check information',
     type: HealthCheckResponse,
   })
+  /**
+   * Returns basic health information for monitoring.
+   * @returns Health check payload.
+   */
   getHealthCheck(): HealthCheckResponse {
     return this.appService.getHealthCheck();
   }
@@ -35,6 +39,10 @@ export class AppController {
     status: 200,
     description: 'Exception metadata',
   })
+  /**
+   * Exposes metadata for custom exceptions (development only).
+   * @returns Exception metadata keyed by exception name.
+   */
   getExceptionMetadata(): Record<ExceptionName, ICustomExceptionInfo> {
     return this.appService.getExceptionMetadata();
   }

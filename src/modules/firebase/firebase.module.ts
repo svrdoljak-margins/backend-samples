@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
 
-import { NotificationProviderToken } from './interface/notification-provider.interface';
+import { AbstractNotificationProvider } from './interface/notification-provider.interface';
 import { FirebaseService } from './providers/firebase.service';
 
 @Module({
   providers: [
     FirebaseService,
     {
-      provide: NotificationProviderToken,
+      provide: AbstractNotificationProvider,
       useExisting: FirebaseService,
     },
   ],
-  exports: [NotificationProviderToken],
+  exports: [AbstractNotificationProvider],
 })
 export class FirebaseModule {}
